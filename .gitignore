@@ -1,0 +1,74 @@
+# Build directories
+/build/
+/build-*/
+cmake-build-*/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+install_manifest.txt
+compile_commands.json
+
+# Make / Ninja files
+Makefile
+build.ninja
+
+# Temporary / object files / libraries / executables
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.lib
+*.dylib
+*.so
+*.dll
+*.exe
+*.out
+
+# Coverage / profiling
+*.gcno
+*.gcda
+*.prof
+coverage/
+*.lcov
+
+# Debug / symbol bundles
+*.dSYM/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Backup and temp files
+*~
+*.swp
+*.tmp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Package managers / dependency caches
+vcpkg_installed/
+.vcpkg/
+conanbuildinfo.*
+.conan/
+.packages/
+
+# Distribution artifacts
+dist/
+bin/
+release/
+*.zip
+*.tar.gz
+*.tar.bz2
+*.7z
