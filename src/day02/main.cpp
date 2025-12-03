@@ -1,107 +1,94 @@
 #include <charconv>
 #include <cstdint>
+#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <ranges>
-#include <stdexcept>
 #include <string>
 #include <string_view>
-
-/**
- * Converts a string view to an unsigned integer.
- */
-uint64_t toUint(std::string_view sv) {
-    uint64_t v{};
-
-    auto res{std::from_chars(sv.data(), sv.data() + sv.size(), v)};
-    if (res.ec != std::errc())
-        throw std::runtime_error("parse error");
-
-    return v;
-}
 
 bool isInvalid(uint64_t n) {
     if (n == 0)
         return true;
 
-    char buffer[20];
-    auto [ptr, ec]{std::to_chars(buffer, buffer + 20, n)};
-    if (ec != std::errc())
-        return false;
+    char buf[20];
+    char* p{buf + 20};
 
-    const int len{static_cast<int>(ptr - buffer)};
+    uint64_t x{n};
+    while (x > 0) {
+        *--p = '0' + (x % 10);
+        x /= 10;
+    }
 
-    for (int pattern_len{1}; pattern_len <= len / 2; ++pattern_len) {
-        if (len % pattern_len != 0)
+    std::string_view sv{p, static_cast<size_t>(buf + 20 - p)};
+    const int len{static_cast<int>(sv.size())};
+
+    for (int psize{1}; psize <= len / 2; ++psize) {
+        if (len % psize != 0)
             continue;
 
-        bool matches{true};
-        for (int i{pattern_len}; i < len; ++i) {
-            if (buffer[i] != buffer[i % pattern_len]) {
-                matches = false;
+        bool ok{true};
+        for (int i{psize}; i < len; ++i) {
+            if (sv[i] != sv[i % psize]) {
+                ok = false;
                 break;
             }
         }
-
-        if (matches)
+        if (ok)
             return true;
     }
-
     return false;
 }
 
-/**
- * Converts a subrange to a string view.
- */
-inline std::string_view asView(auto&& sub) {
-    return {&*sub.begin(), static_cast<size_t>(std::ranges::distance(sub))};
-}
-
 int main() {
-    try {
-        uint64_t invalIdsSum{0};
-        std::ifstream file("input.txt");
-        if (!file)
-            throw std::runtime_error("Could not open the file.");
+    uint64_t invalIdsSum{0};
 
-        std::string line;
-        std::getline(file, line);
-        file.close();
-
-        if (!line.empty() && line.back() == '\r')
-            line.pop_back();
-
-        for (const auto part : std::views::split(line, ',')) {
-            auto range{asView(part)};
-
-            auto pieces{std::views::split(range, '-')};
-            auto it{pieces.begin()};
-            if (it == pieces.end())
-                throw std::runtime_error("Invalid range format.");
-
-            auto a{toUint(asView(*it++))};
-            if (it == pieces.end())
-                throw std::runtime_error("Invalid range format.");
-
-            auto b{toUint(asView(*it))};
-
-            if (a == b) {
-                if (isInvalid(a))
-                    invalIdsSum += a;
-                continue;
-            }
-
-            for (uint64_t id{a}; id <= b; ++id) {
-                if (isInvalid(id))
-                    invalIdsSum += id;
-            }
-        }
-
-        std::cout << "Sum of invalid IDs: " << invalIdsSum << "\n";
-
-        return 0;
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << "\n";
+    std::ifstream file{"input.txt"};
+    if (!file) {
+        std::cerr << "Failed to open input.txt\n";
         return 1;
     }
+
+    std::string line{};
+    std::getline(file, line);
+
+    if (!line.empty() && line.back() == '\r')
+        line.pop_back();
+
+    const char* s{line.data()};
+    const char* end{s + line.size()};
+
+    while (s < end) {
+        const char* comma{reinterpret_cast<const char*>(std::memchr(s, ',', end - s))};
+        if (!comma)
+            comma = end;
+
+        const char* dash{reinterpret_cast<const char*>(std::memchr(s, '-', comma - s))};
+        if (!dash) {
+            std::cerr << "Invalid range (missing '-')\n";
+            return 1;
+        }
+
+        uint64_t a{0}, b{0};
+
+        auto r1{std::from_chars(s, dash, a)};
+        if (r1.ec != std::errc{})
+            return 1;
+
+        auto r2{std::from_chars(dash + 1, comma, b)};
+        if (r2.ec != std::errc{})
+            return 1;
+
+        if (a == b) {
+            if (isInvalid(a))
+                invalIdsSum += a;
+        } else {
+            for (uint64_t id{a}; id <= b; ++id)
+                if (isInvalid(id))
+                    invalIdsSum += id;
+        }
+
+        s = comma + (comma != end);
+    }
+
+    std::cout << "Sum of invalid IDs: " << invalIdsSum << "\n";
 }
