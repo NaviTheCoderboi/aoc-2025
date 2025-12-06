@@ -19,15 +19,15 @@ bool isInvalid(uint64_t n) {
         x /= 10;
     }
 
-    std::string_view sv{p, static_cast<size_t>(buf + 20 - p)};
-    const int len{static_cast<int>(sv.size())};
+    std::string_view sv{p, static_cast<std::size_t>(buf + 20 - p)};
+    const std::size_t len{sv.size()};
 
-    for (int psize{1}; psize <= len / 2; ++psize) {
+    for (std::size_t psize{1}; psize <= len / 2; ++psize) {
         if (len % psize != 0)
             continue;
 
         bool ok{true};
-        for (int i{psize}; i < len; ++i) {
+        for (std::size_t i{psize}; i < len; ++i) {
             if (sv[i] != sv[i % psize]) {
                 ok = false;
                 break;
@@ -40,7 +40,7 @@ bool isInvalid(uint64_t n) {
 }
 
 int main() {
-    uint64_t invalIdsSum{0};
+    std::uint64_t invalIdsSum{0};
 
     std::ifstream file{"input.txt"};
     if (!file) {
@@ -68,7 +68,7 @@ int main() {
             return 1;
         }
 
-        uint64_t a{0}, b{0};
+        std::uint64_t a{0}, b{0};
 
         auto r1{std::from_chars(s, dash, a)};
         if (r1.ec != std::errc{})
@@ -82,7 +82,7 @@ int main() {
             if (isInvalid(a))
                 invalIdsSum += a;
         } else {
-            for (uint64_t id{a}; id <= b; ++id)
+            for (std::uint64_t id{a}; id <= b; ++id)
                 if (isInvalid(id))
                     invalIdsSum += id;
         }

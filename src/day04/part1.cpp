@@ -21,13 +21,13 @@ int main() {
         return 1;
     }
 
-    int totalRows{static_cast<int>(grid.size())};
-    int totalColumns{grid.empty() ? 0 : static_cast<int>(grid[0].size())};
+    int numRows{static_cast<int>(grid.size())};
+    int numCols{grid.empty() ? 0 : static_cast<int>(grid[0].size())};
 
     int accessiblePaperRoles{0};
 
-    for (int currentRow{0}; currentRow < totalRows; ++currentRow) {
-        for (int currentColumn{0}; currentColumn < totalColumns; ++currentColumn) {
+    for (int currentRow{0}; currentRow < numRows; ++currentRow) {
+        for (int currentColumn{0}; currentColumn < numCols; ++currentColumn) {
             char currentChar{grid[currentRow][currentColumn]};
             if (currentChar != '@')
                 continue;
@@ -41,10 +41,10 @@ int main() {
                     int neighborRow{static_cast<int>(currentRow) + rowOffset};
                     int neighborColumn{static_cast<int>(currentColumn) + columnOffset};
 
-                    if (neighborRow < 0 || neighborRow >= totalRows) {
+                    if (neighborRow < 0 || neighborRow >= numRows) {
                         continue;
                     }
-                    if (neighborColumn < 0 || neighborColumn >= totalColumns) {
+                    if (neighborColumn < 0 || neighborColumn >= numCols) {
                         continue;
                     }
 

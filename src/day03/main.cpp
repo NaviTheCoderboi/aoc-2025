@@ -11,16 +11,16 @@ int main() {
     }
 
     std::uint64_t totalJoltage{0};
-    const size_t k{12};
+    const std::size_t k{12};
 
     for (std::string line{}; std::getline(inputFile, line);) {
         int stack[k]{};
-        size_t size{0};
-        const size_t n{line.size()};
+        std::size_t size{0};
+        const std::size_t n{line.size()};
 
-        for (size_t i{0}; i < n; ++i) {
+        for (std::size_t i{0}; i < n; ++i) {
             int currentDigit{line[i] - '0'};
-            size_t remaining{n - i - 1};
+            std::size_t remaining{n - i - 1};
 
             while (size && currentDigit > stack[size - 1] && ((size - 1 + remaining + 1) >= k)) {
                 --size;
@@ -32,7 +32,7 @@ int main() {
         }
 
         std::uint64_t number{0};
-        for (size_t i{0}; i < k; ++i) {
+        for (std::size_t i{0}; i < k; ++i) {
             number = number * 10 + stack[i];
         }
 

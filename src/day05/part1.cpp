@@ -28,7 +28,7 @@ int main() {
     int freshIngredientsCount{};
     for (const auto& ingredientId : ingredientIds) {
         for (const auto& range : freshIngeredientsRanges) {
-            size_t dashPos = range.find('-');
+            std::size_t dashPos = range.find('-');
             if (dashPos == std::string::npos) {
                 continue;
             }

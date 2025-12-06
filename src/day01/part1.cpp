@@ -74,14 +74,14 @@ std::vector<Rotation> parseRotations(const std::vector<std::string>& rawRotation
 /**
  * Rotates the current position based on the given rotation.
  *
- * @param currentPositon The current position of the dial (0-99).
+ * @param currentPosition The current position of the dial (0-99).
  * @param rotation The rotation to apply.
  */
-void rotate(int& currentPositon, const Rotation& rotation) {
+void rotate(int& currentPosition, const Rotation& rotation) {
     if (rotation.direction == Direction::LEFT) {
-        currentPositon = ((currentPositon - (rotation.ticks % 100)) + 100) % 100;
+        currentPosition = ((currentPosition - (rotation.ticks % 100)) + 100) % 100;
     } else {
-        currentPositon = (currentPositon + (rotation.ticks % 100)) % 100;
+        currentPosition = (currentPosition + (rotation.ticks % 100)) % 100;
     }
 }
 

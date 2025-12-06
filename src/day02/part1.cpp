@@ -43,12 +43,12 @@ bool isInvalid(uint64_t n) {
  * Converts a subrange to a string view.
  */
 inline std::string_view asView(auto&& sub) {
-    return {&*sub.begin(), static_cast<size_t>(std::ranges::distance(sub))};
+    return {&*sub.begin(), static_cast<std::size_t>(std::ranges::distance(sub))};
 }
 
 int main() {
     try {
-        uint64_t invalIdsSum{0};
+        std::uint64_t invalIdsSum{0};
         std::ifstream file("input.txt");
         if (!file)
             throw std::runtime_error("Could not open the file.");
@@ -79,7 +79,7 @@ int main() {
                 continue;
             }
 
-            for (uint64_t id{a}; id <= b; id++) {
+            for (std::uint64_t id{a}; id <= b; id++) {
                 if (isInvalid(id))
                     invalIdsSum += id;
             }
