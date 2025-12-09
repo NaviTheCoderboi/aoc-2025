@@ -3,6 +3,8 @@
 /build-*/
 cmake-build-*/
 
+.github
+
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt
